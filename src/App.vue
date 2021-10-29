@@ -1,6 +1,12 @@
 <template>
   <div id="app">
     <div class="wrapper">
+      <blog-nav></blog-nav>
+      <div class="container">
+        <div class="content"><router-view></router-view></div>
+      </div>
+    </div>
+    <!-- <div class="wrapper">
       <base-nav :navHeader="true">
         <div>
           <base-router-link
@@ -59,75 +65,59 @@
         </div>
       </base-nav>
       <router-view></router-view>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import BaseNav from "@/components/BaseNav";
-import BaseRouterLink from "@/components/BaseRouterLink";
+//import BaseNav from "@/components/BaseNav";
+//import BaseRouterLink from "@/components/BaseRouterLink";
+import BlogNav from "@/components/BlogNav";
+import { mapGetters } from "vuex";
 
 export default {
   name: "App",
   components: {
-    BaseNav,
-    BaseRouterLink,
+    BlogNav,
+    //BaseNav,
+    //BaseRouterLink,
+  },
+  computed: {
+    ...mapGetters({
+      logStatus: "auth/getUserLogStatus",
+      userName: "auth/getUserName",
+      userAvatar: "auth/getUserAvatar",
+    }),
   },
 };
 </script>
 
 <style lang="scss">
+* {
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  background: #333852;
 }
-
 .wrapper {
-  width: 800px;
-  margin: 0 auto;
-}
-
-.nav-header {
-  &__items {
-    &-right {
-      display: flex;
-    }
-  }
-}
-
-.profile {
   display: flex;
+}
 
-  &__title {
-    cursor: pointer;
-    color: black;
-  }
+.container {
+  width: 100%;
+  border-radius: 10px 0 0 10px;
+  background: white;
+  display: flex;
+}
 
-  &__username {
-    padding: 8px 16px;
-  }
-
-  &__menu {
-    text-align: center;
-
-    &-btn-profile {
-      margin-top: 20px;
-    }
-  }
-
-  &__avatar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    & input {
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-  }
+.content {
+  width: 100%;
+  text-align: center;
 }
 </style>
