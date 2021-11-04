@@ -1,5 +1,5 @@
 <template>
-  <div class="base-list">
+  <div>
     <slot></slot>
   </div>
 </template>
@@ -10,8 +10,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.base-list {
-  display: flex;
-}
-</style>
+<style lang="scss" scoped></style>

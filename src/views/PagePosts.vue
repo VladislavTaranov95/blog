@@ -1,57 +1,118 @@
 <template>
-  <div class="page-posts">
-    <base-list>
-      <div><blog-options></blog-options></div>
-      <div class="posts">
-        <post-item
-          v-for="post in posts"
-          :key="post._id"
-          class="post"
-          :post="post"
-        >
-        </post-item>
-      </div>
-    </base-list>
+  <div class="container">
+    <div v-loading="!contentLoaded">
+      <app-list class="list">
+        <div class="list__options">
+          <blog-options></blog-options>
+        </div>
+        <div class="list__posts">
+          <post-item
+            v-for="post in posts"
+            :key="post._id"
+            class="list__item"
+            :post="post"
+          >
+          </post-item>
+        </div>
+        <div class="list__pagination">
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="totalPosts"
+            @current-change="changePage"
+          >
+          </el-pagination>
+        </div>
+      </app-list>
+    </div>
   </div>
 </template>
 
 <script>
-import BaseList from "@/components/BaseList";
+import AppList from "@/components/AppList";
 import PostItem from "@/components/PostItem";
 import BlogOptions from "@/components/BlogOptions";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "PagePosts",
   components: {
-    BaseList,
+    AppList,
     PostItem,
     BlogOptions,
   },
   data() {
-    return {};
+    return {
+      contentLoaded: false,
+    };
   },
   methods: {
     ...mapActions({
-      fetchPosts: "posts/fetchPosts",
+      getPosts: "posts/getPosts",
+      getPostsAmount: "posts/getPostsAmount",
     }),
+    ...mapMutations({
+      setCurrentPage: "posts/setCurrentPage",
+    }),
+    changePage(value) {
+      let path = "",
+        page = 0;
+
+      if (value !== 1) {
+        path = { path: "/posts/", query: { page: value } };
+        page = value - 1;
+      } else {
+        path = "/posts";
+        page = 0;
+      }
+
+      this.$router
+        .push(path)
+        .then(() => {
+          this.setCurrentPage(page);
+          this.contentLoaded = false;
+          return this.$store.dispatch("posts/getPosts");
+        })
+        .then(() => {
+          this.contentLoaded = true;
+        });
+    },
   },
   computed: {
     ...mapGetters({
       posts: "posts/getPosts",
+      totalPosts: "posts/getTotalPosts",
+      postsOnPageAmount: "posts/getAmountPostsOnPage",
     }),
   },
-  mounted() {
-    this.fetchPosts();
+  async mounted() {
+    await this.getPosts();
+    this.contentLoaded = true;
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.posts {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.list {
+  &__options {
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  &__item {
+    padding: 10px 10px;
+  }
+
+  &__posts {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__pagination {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }
 </style>

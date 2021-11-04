@@ -22,6 +22,9 @@ export const auth = {
         },
         getUserAvatar: state => {
             return BASE_URL + state.authInfo.userInfo.avatar
+        },
+        getUserId: state => {
+            return state.authInfo.userInfo._id
         }
     },
     actions: {},

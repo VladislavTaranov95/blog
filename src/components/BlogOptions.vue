@@ -1,16 +1,42 @@
 <template>
-  <div class="blog-options">Options</div>
+  <div class="blog-options" :class="className">
+    <app-select :options="options"></app-select>
+  </div>
 </template>
 
 <script>
-export default {};
+import AppSelect from "@/components/events/AppSelect.vue";
+
+export default {
+  components: {
+    AppSelect,
+  },
+  data() {
+    return {
+      blogOptionsStatus: true,
+      options: [
+        { value: "title", name: "By title" },
+        { value: "description", name: "By description" },
+      ],
+    };
+  },
+  methods: {
+    blogStatus() {
+      this.blogOptionsStatus = !this.blogOptionsStatus;
+    },
+  },
+  computed: {
+    className() {
+      return {
+        "blog-options-content-hide": !this.blogOptionsStatus,
+      };
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .blog-options {
-  width: 400px;
-  height: 100%;
-  background: #2b2f42;
-  border-radius: 9px 0 0 9px;
+  height: 50px;
 }
 </style>

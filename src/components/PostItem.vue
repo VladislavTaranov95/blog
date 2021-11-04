@@ -1,22 +1,26 @@
 <template>
-  <div class="post">
-    <el-card>
+  <div>
+    <el-card class="post">
       <template #header>
-        <h2>{{ post.title }}</h2>
+        <h2 class="test">{{ post.title }}</h2>
       </template>
-      <div>{{ post.description }}</div>
-      <div class="post__footer">
-        <div class="post__likes">
-          <div @click="setPostLike">
-            <img style="width: 28px; height: 28px" src="@/assets/like.png" />
+      <div class="post__body">
+        <div>{{ post.description }}</div>
+        <div class="post__footer">
+          <div class="post__likes">
+            <div @click="setPostLike">
+              <img style="width: 28px; height: 28px" src="@/assets/like.png" />
+            </div>
+            <div style="margin-right: 10px">
+              {{ post.likes.length }}
+            </div>
           </div>
-          <div style="margin-right: 10px">
-            {{ post.likes.length }}
+          <div class="post-btn">
+            <el-button @click="openPost">Open</el-button>
+            <div v-if="post.createdBy === userId">
+              <el-button type="danger" @click="deletePost">Delete</el-button>
+            </div>
           </div>
-        </div>
-        <div class="post-btn">
-          <el-button @click="openPost">Open</el-button>
-          <el-button type="danger" @click="deletePost">Delete</el-button>
         </div>
       </div>
     </el-card>
@@ -70,7 +74,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userInfo: "auth/getUser",
+      userId: "auth/getUserId",
     }),
   },
 };
@@ -78,9 +82,20 @@ export default {
 
 <style lang="scss" scoped>
 .post {
-  width: 1000px;
-  margin-top: 15px;
+  width: 340px;
+  height: 420px;
   text-align: left;
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 310px;
+
+    div {
+      word-break: break-word;
+    }
+  }
 
   &__footer {
     margin-top: 10px;
@@ -99,6 +114,12 @@ export default {
         cursor: pointer;
       }
     }
+  }
+
+  h2 {
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
   }
 }
 </style>
