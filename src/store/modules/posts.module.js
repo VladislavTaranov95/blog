@@ -8,7 +8,8 @@ export const posts = {
     totalPosts: 0,
     postsOnPageAmount: 8,
     pages: 0,
-    currentPage: 0
+    currentPage: 0,
+    selectedSort: "title"
   },
   getters: {
     getPosts: state => {
@@ -25,6 +26,9 @@ export const posts = {
     },
     getAmountPostsOnPage: state => {
       return state.postsOnPageAmount
+    },
+    sortPosts: state => {
+      return state.posts.sort((a, b) => a[state.selectedSort].split(' ').join().toUpperCase().localeCompare(b[state.selectedSort].split(' ').join().toUpperCase()))
     }
   },
   actions: {
@@ -95,19 +99,6 @@ export const posts = {
         }
       })
     },
-    sortPosts(state, data) {
-      console.log('tyk tyk')
-      state.posts.sort(function compare(a, b) {
-        if (a[data] < b[data]) {
-          return -1;
-        }
-        if (a[data] > b[data]) {
-          return 1;
-        }
-        return 0;
-      })
-      state.filtered = data
-    },
     setPagesAmount(state, pagesAmount) {
       state.pages = pagesAmount
     },
@@ -116,6 +107,9 @@ export const posts = {
     },
     setPost(state, post) {
       state.post = post
+    },
+    setSelectedSort(state, value) {
+      state.selectedSort = value
     }
   },
 };

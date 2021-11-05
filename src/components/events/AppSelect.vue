@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   props: {
@@ -27,12 +27,18 @@ export default {
   },
   methods: {
     ...mapMutations({
-      sortPosts: "posts/sortPosts",
+      selectedSort: "posts/setSelectedSort",
     }),
     selectOption(option) {
       this.value = option;
-      this.sortPosts(this.value);
+      this.selectedSort(option);
+      this.sortPosts;
     },
+  },
+  computed: {
+    ...mapGetters({
+      sortPosts: "posts/sortPosts",
+    }),
   },
 };
 </script>

@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div class="app-wrapper">
-      <app-navigation></app-navigation>
+      <app-navigation v-if="!navigation"></app-navigation>
       <router-view />
-      <app-footer></app-footer>
+      <app-footer v-if="!navigation"></app-footer>
     </div>
   </div>
 </template>
@@ -16,10 +16,24 @@ import AppFooter from "@/components/AppFooter";
 import { mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      navigation: null,
+    };
+  },
   name: "App",
   components: {
     AppNavigation,
     AppFooter,
+  },
+  methods: {
+    checkRoute() {
+      if (this.$route.name === "Login" || this.$route.name === "Register") {
+        this.navigation = true;
+        return;
+      }
+      this.navigation = false;
+    },
   },
   computed: {
     ...mapGetters({
@@ -27,6 +41,14 @@ export default {
       userName: "auth/getUserName",
       userAvatar: "auth/getUserAvatar",
     }),
+  },
+  watch: {
+    $route() {
+      this.checkRoute();
+    },
+  },
+  created() {
+    this.checkRoute();
   },
 };
 </script>
@@ -44,7 +66,6 @@ export default {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
 }
 
 .container {

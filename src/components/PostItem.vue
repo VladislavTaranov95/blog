@@ -5,6 +5,7 @@
         <h2 class="test">{{ post.title }}</h2>
       </template>
       <div class="post__body">
+        <slot></slot>
         <div>{{ post.description }}</div>
         <div class="post__footer">
           <div class="post__likes">
@@ -83,14 +84,14 @@ export default {
 <style lang="scss" scoped>
 .post {
   width: 340px;
-  height: 420px;
+  height: 370px;
   text-align: left;
 
   &__body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 310px;
+    height: 260px;
 
     div {
       word-break: break-word;

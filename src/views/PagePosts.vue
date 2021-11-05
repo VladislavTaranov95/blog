@@ -7,11 +7,12 @@
         </div>
         <div class="list__posts">
           <post-item
-            v-for="post in posts"
+            v-for="(post, index) in posts"
             :key="post._id"
             class="list__item"
             :post="post"
           >
+            <div>{{ index }}</div>
           </post-item>
         </div>
         <div class="list__pagination">
@@ -86,8 +87,14 @@ export default {
     }),
   },
   async mounted() {
+    if (this.$route.query.page) {
+      this.setCurrentPage(this.$route.query.page - 1);
+    }
     await this.getPosts();
     this.contentLoaded = true;
+  },
+  unmounted() {
+    this.setCurrentPage(0);
   },
 };
 </script>
@@ -113,6 +120,7 @@ export default {
   &__pagination {
     margin-top: 20px;
     margin-bottom: 20px;
+    text-align: center;
   }
 }
 </style>
