@@ -113,7 +113,22 @@ export const posts = {
           return Promise.reject(error.response.data.error);
         }
       )
-    }
+    },
+    async savePost({ commit }, post) {
+      return service.patch(`posts/${post._id}`, {
+        title: post.title,
+        fullText: post.fullText,
+        description: post.description
+      }).then(
+        (response) => {
+          commit("updatePost", response.data)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          return Promise.reject(error.error);
+        }
+      )
+    },
   },
   mutations: {
     setPosts(state, posts) {
@@ -150,6 +165,13 @@ export const posts = {
     },
     deletePost(state, id) {
       state.posts = state.posts.filter(p => p._id !== id);
+    },
+    updatePost(state, data) {
+      state.posts.forEach(post => {
+        if (post._id === data._id) {
+          post = { ...data }
+        }
+      })
     },
   },
 };

@@ -10,7 +10,7 @@
             v-if="userLogStatus && post.postedBy === userId"
             class="post-page-btn-edit"
             round
-            @click="editPost()"
+            @click="editPost(post)"
           >
             Edit post
           </el-button>
@@ -62,6 +62,11 @@ export default {
       userLogStatus: "auth/getUserLogStatus",
       userId: "auth/getUserId",
     }),
+  },
+  methods: {
+    editPost(post) {
+      this.$router.push(`/post/${post._id}/edit`);
+    },
   },
   async mounted() {
     const response = await this.$store.dispatch(

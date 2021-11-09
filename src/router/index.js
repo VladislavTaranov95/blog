@@ -7,6 +7,7 @@ const Register = () => import('@/views/Register')
 const UserProfile = () => import('@/views/UserProfile')
 const CreatePost = () => import('@/views/CreatePost')
 const PagePost = () => import('@/views/PagePost')
+const EditPost = () => import('@/views/EditPost')
 
 const routes = [
   {
@@ -63,6 +64,14 @@ const routes = [
     component: PagePost,
     meta: {
       title: "Post"
+    }
+  },
+  {
+    path: "/post/:id/edit",
+    name: "EditPost",
+    component: EditPost,
+    meta: {
+      title: "Edit"
     }
   }
 ];
