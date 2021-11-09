@@ -1,4 +1,5 @@
 import service from "@/helpers/api";
+import saveToLocalStorage from "../plugins/webStorage";
 
 const token = localStorage.getItem("token");
 const user = JSON.parse(localStorage.getItem("user"));
@@ -58,9 +59,7 @@ export const auth = {
         })
         .then(
           user => {
-            localStorage.setItem("user", JSON.stringify(user.data));
             commit("loginSuccess", user.data);
-
             return Promise.resolve(user);
           },
           error => {
@@ -88,8 +87,6 @@ export const auth = {
         );
     },
     userLogout({ commit }) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
       commit("logout");
     },
     saveProfile({ commit }, data) {
@@ -117,7 +114,6 @@ export const auth = {
         }
       })
       commit('updateUser', response.data)
-      localStorage.setItem("user", JSON.stringify(response.data));
     },
   },
   mutations: {
@@ -128,6 +124,7 @@ export const auth = {
       state.authInfo.isAuth = false;
     },
     loginSuccess(state, user) {
+      saveToLocalStorage()
       state.authInfo.isAuth = true;
       state.authInfo.userInfo = user;
     },
@@ -136,14 +133,17 @@ export const auth = {
       state.authInfo.userInfo = null;
     },
     logout(state) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       state.authInfo.isAuth = false;
       state.authInfo.userInfo = null;
     },
     profileSaveSuccess(state, data) {
       state.authInfo.userInfo = data;
-      localStorage.setItem("user", JSON.stringify(data));
+      saveToLocalStorage()
     },
     updateUser(state, user) {
+      saveToLocalStorage()
       state.authInfo.userInfo = user;
     },
   },
