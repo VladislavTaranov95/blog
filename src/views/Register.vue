@@ -58,9 +58,10 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
+import { sendMsg } from "@/helpers/message";
 
 export default {
+  name: "Register",
   data() {
     return {
       registerForm: {
@@ -76,9 +77,9 @@ export default {
             trigger: "blur",
           },
           {
-            min: 6,
-            max: 20,
-            message: "Length should be 6 to 20",
+            min: 5,
+            max: 10,
+            message: "Length should be 5 to 10",
             trigger: "blur",
           },
         ],
@@ -122,10 +123,7 @@ export default {
         if (valid) {
           this.signUp();
         } else {
-          ElMessage.error({
-            center: true,
-            message: "Ivalid form, please check",
-          });
+          sendMsg("error", "Ivalid form, please check");
           return false;
         }
       });
@@ -136,10 +134,7 @@ export default {
         .then(
           () => {},
           (error) => {
-            ElMessage.error({
-              center: true,
-              message: error.response.data.error,
-            });
+            sendMsg("error", error.response.data.error);
           }
         )
         .then(() => {

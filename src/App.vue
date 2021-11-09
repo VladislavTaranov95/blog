@@ -16,15 +16,15 @@ import AppFooter from "@/components/AppFooter";
 import { mapGetters } from "vuex";
 
 export default {
-  data() {
-    return {
-      navigation: null,
-    };
-  },
   name: "App",
   components: {
     AppNavigation,
     AppFooter,
+  },
+  data() {
+    return {
+      navigation: null,
+    };
   },
   methods: {
     checkRoute() {

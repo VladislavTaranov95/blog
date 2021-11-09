@@ -14,6 +14,7 @@
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
+  name: "AppSelect",
   props: {
     options: {
       type: Array,

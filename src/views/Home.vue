@@ -33,6 +33,7 @@
 import arrow from "@/assets/app-icons/arrow_right_icon.svg";
 
 export default {
+  name: "Home",
   components: {
     arrow,
   },

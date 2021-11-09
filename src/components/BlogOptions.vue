@@ -8,6 +8,7 @@
 import AppSelect from "@/components/events/AppSelect.vue";
 
 export default {
+  name: "BlogOptions",
   components: {
     AppSelect,
   },

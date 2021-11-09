@@ -31,6 +31,15 @@ export const auth = {
     },
     getUserId: state => {
       return state.authInfo.userInfo._id
+    },
+    getUserSkills: state => {
+      return state.authInfo.userInfo.skills
+    },
+    getUserProfession: state => {
+      return state.authInfo.userInfo.profession
+    },
+    getUserRegDate: state => {
+      return state.authInfo.userInfo.dateCreated
     }
   },
   actions: {
@@ -83,6 +92,33 @@ export const auth = {
       localStorage.removeItem("user");
       commit("logout");
     },
+    saveProfile({ commit }, data) {
+      return service
+        .patch(`users/${data.id}`, {
+          name: data.name,
+          profession: data.profession,
+          skills: data.skills
+        })
+        .then(
+          response => {
+            commit("profileSaveSuccess", response.data);
+            return Promise.resolve(response.data);
+          },
+          error => {
+            commit("profileSaveFailure");
+            return Promise.reject(error);
+          }
+        );
+    },
+    async editUserPhoto({ state, commit }, payload) {
+      const response = await service.put('/users/upload/' + state.authInfo.userInfo._id, payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      commit('updateUser', response.data)
+      localStorage.setItem("user", JSON.stringify(response.data));
+    },
   },
   mutations: {
     registerSuccess(state) {
@@ -102,6 +138,13 @@ export const auth = {
     logout(state) {
       state.authInfo.isAuth = false;
       state.authInfo.userInfo = null;
+    },
+    profileSaveSuccess(state, data) {
+      state.authInfo.userInfo = data;
+      localStorage.setItem("user", JSON.stringify(data));
+    },
+    updateUser(state, user) {
+      state.authInfo.userInfo = user;
     },
   },
 };

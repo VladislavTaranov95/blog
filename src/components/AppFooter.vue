@@ -42,6 +42,7 @@ import instagram from "@/assets/app-icons/instagram_logo_icon.svg";
 import linkedin from "@/assets/app-icons/linkedin_logo_icon.svg";
 
 export default {
+  name: "AppFooter",
   components: {
     youtube,
     twitter,

@@ -41,9 +41,10 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
+import { sendMsg } from "@/helpers/message";
 
 export default {
+  name: "Login",
   data() {
     return {
       loginForm: {
@@ -91,26 +92,18 @@ export default {
         if (valid) {
           this.signIn();
         } else {
-          ElMessage.error({
-            center: true,
-            message: "Ivalid form, please check",
-          });
+          sendMsg("error", "Ivalid form, please check");
           return false;
         }
       });
     },
     signIn() {
-      console.log(123);
       this.$store.dispatch("auth/userLogin", this.loginForm).then(
         () => {
-          console.log(12345);
           this.$router.push("/");
         },
         (error) => {
-          ElMessage.error({
-            center: true,
-            message: error.response.data.error,
-          });
+          sendMsg("error", error.response.data.error);
         }
       );
     },

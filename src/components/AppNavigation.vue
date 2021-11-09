@@ -8,7 +8,7 @@
         <ul>
           <router-link class="link" to="/">Home</router-link>
           <router-link class="link" to="/posts">Blogs</router-link>
-          <router-link class="link" to="/">Create Post</router-link>
+          <router-link class="link" to="/createpost">Create Post</router-link>
           <router-link v-if="!userLogStatus" class="link" to="/login">
             Login/Register
           </router-link>
@@ -51,6 +51,7 @@ import { mapGetters } from "vuex";
 import { User, Right } from "@element-plus/icons";
 
 export default {
+  name: "AppNavigation",
   components: {
     User,
     Right,

@@ -29,7 +29,7 @@ export const posts = {
     },
     sortPosts: state => {
       return state.posts.sort((a, b) => a[state.selectedSort].split(' ').join().toUpperCase().localeCompare(b[state.selectedSort].split(' ').join().toUpperCase()))
-    }
+    },
   },
   actions: {
     async getPostsAmount({ state, commit }) {
@@ -80,6 +80,40 @@ export const posts = {
         }
       )
     },
+    async addNewPost({ commit }, post) {
+      return service.post("posts", {
+        title: post.title,
+        description: post.description,
+        fullText: post.fullText
+      }).then(response => {
+        commit("setNewPost", response.data);
+        return Promise.resolve(response);
+      },
+        error => {
+          return Promise.reject(error);
+        });
+    },
+    async deletePost({ commit }, id) {
+      return service.delete(`posts/${id}`).then(
+        response => {
+          commit("deletePost", id);
+          return Promise.resolve(response);
+        },
+        error => {
+          return Promise.reject(error.response.data.error);
+        }
+      )
+    },
+    async getNameById(_, id) {
+      return service.get(`users/${id}`).then(
+        response => {
+          return Promise.resolve(response);
+        },
+        error => {
+          return Promise.reject(error.response.data.error);
+        }
+      )
+    }
   },
   mutations: {
     setPosts(state, posts) {
@@ -110,6 +144,12 @@ export const posts = {
     },
     setSelectedSort(state, value) {
       state.selectedSort = value
-    }
+    },
+    setNewPost(state, post) {
+      state.posts.push(post);
+    },
+    deletePost(state, id) {
+      state.posts = state.posts.filter(p => p._id !== id);
+    },
   },
 };

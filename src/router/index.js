@@ -1,8 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "@/views/Home"
-import PagePosts from "@/views/PagePosts";
-import Login from "@/views/Login"
-import Register from "@/views/Register"
+
+const Home = () => import('@/views/Home')
+const PagePosts = () => import('@/views/PagePosts')
+const Login = () => import('@/views/Login')
+const Register = () => import('@/views/Register')
+const UserProfile = () => import('@/views/UserProfile')
+const CreatePost = () => import('@/views/CreatePost')
+const PagePost = () => import('@/views/PagePost')
 
 const routes = [
   {
@@ -35,6 +39,30 @@ const routes = [
     component: Register,
     meta: {
       title: "Register"
+    }
+  },
+  {
+    path: "/profile",
+    name: "UserProfile",
+    component: UserProfile,
+    meta: {
+      title: "Profile"
+    }
+  },
+  {
+    path: "/createpost",
+    name: "CreatePost",
+    component: CreatePost,
+    meta: {
+      title: "New Post"
+    }
+  },
+  {
+    path: "/post/:id",
+    name: "PagePost",
+    component: PagePost,
+    meta: {
+      title: "Post"
     }
   }
 ];

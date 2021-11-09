@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "@/services/auth.service";
 
 const service = axios.create({
-  baseURL: "http://51.158.179.21/api/v1/",
+  baseURL: process.env.VUE_APP_ROOT_API,
   headers: {
     "Content-Type": "application/json"
   }

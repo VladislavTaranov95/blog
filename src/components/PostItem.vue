@@ -5,10 +5,29 @@
         <h2 class="test">{{ post.title }}</h2>
       </template>
       <div class="post__body">
-        <slot></slot>
+        <div
+          v-if="post.image"
+          :style="{
+            backgroundImage: 'url(' + BASE_URL + post.image + ')',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center',
+            backgroundSize: 'cover',
+            height: '150px',
+          }"
+        ></div>
+        <div
+          class="post__image"
+          v-else
+          :style="{
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center',
+            backgroundSize: 'cover',
+            height: '150px',
+          }"
+        ></div>
         <div>{{ post.description }}</div>
         <div class="post__footer">
-          <div class="post__likes">
+          <div class="post__likes" v-if="userLogStatus">
             <div @click="setPostLike">
               <img style="width: 28px; height: 28px" src="@/assets/like.png" />
             </div>
@@ -17,9 +36,14 @@
             </div>
           </div>
           <div class="post-btn">
-            <el-button @click="openPost">Open</el-button>
-            <div v-if="post.createdBy === userId">
-              <el-button type="danger" @click="deletePost">Delete</el-button>
+            <el-button @click="openPost"> Open </el-button>
+            <div v-if="userLogStatus && post.postedBy === userId">
+              <el-button
+                style="margin-left: 10px"
+                type="danger"
+                @click="deletePost"
+                >Delete</el-button
+              >
             </div>
           </div>
         </div>
@@ -29,8 +53,8 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
 import { mapGetters } from "vuex";
+import { sendMsg } from "@/helpers/message.js";
 
 export default {
   name: "PostItem",
@@ -38,7 +62,13 @@ export default {
     post: {
       type: Object,
       default: () => {},
+      required: true,
     },
+  },
+  data() {
+    return {
+      BASE_URL: "http://51.158.179.21",
+    };
   },
   methods: {
     openPost() {
@@ -47,37 +77,32 @@ export default {
     async deletePost() {
       try {
         await this.$store.dispatch("posts/deletePost", this.post._id);
-        ElMessage.success({
-          center: true,
-          message: "Post has been deleted.",
-        });
+        sendMsg("success", "Post has been deleted.");
       } catch (error) {
-        ElMessage.error({
-          center: true,
-          message: error,
-        });
+        sendMsg("error", error);
       }
     },
     async setPostLike() {
       const payload = {
-        userId: this.userInfo._id,
+        userId: this.userId,
         postId: this.post._id,
       };
+      console.log(this.userId);
       try {
         await this.$store.dispatch("posts/addLikeToPost", payload);
       } catch (error) {
-        ElMessage.error({
-          center: true,
-          message: error.error,
-        });
+        sendMsg("error", error.error);
       }
     },
   },
   computed: {
     ...mapGetters({
       userId: "auth/getUserId",
+      postPhoto: "posts/getPostPhoto",
+      userLogStatus: "auth/getUserLogStatus",
     }),
   },
+  mounted() {},
 };
 </script>
 
@@ -96,6 +121,11 @@ export default {
     div {
       word-break: break-word;
     }
+  }
+
+  &__image {
+    background-image: url("../assets/no-photo.png");
+    opacity: 0.5;
   }
 
   &__footer {
@@ -121,6 +151,10 @@ export default {
     white-space: nowrap;
     overflow: hidden !important;
     text-overflow: ellipsis;
+  }
+
+  &-btn {
+    display: flex;
   }
 }
 </style>

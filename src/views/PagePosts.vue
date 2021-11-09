@@ -21,6 +21,7 @@
             layout="prev, pager, next"
             :total="totalPosts"
             @current-change="changePage"
+            :page-size="8"
           >
           </el-pagination>
         </div>
@@ -90,6 +91,7 @@ export default {
     if (this.$route.query.page) {
       this.setCurrentPage(this.$route.query.page - 1);
     }
+    await this.getPostsAmount();
     await this.getPosts();
     this.contentLoaded = true;
   },
