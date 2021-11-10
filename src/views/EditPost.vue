@@ -43,6 +43,16 @@
             <el-button class="post-btn-save" round @click="submitForm('post')">
               Save post
             </el-button>
+            <label for="file-upload" class="custom-file-upload">
+              <el-icon>
+                <upload-filled></upload-filled>
+              </el-icon>
+              Upload image
+            </label>
+            <input id="file-upload" type="file" @change="uploadImage($event)" />
+            <p style="display: inline-block; margin-left: 10px" v-if="formData">
+              Image loaded!
+            </p>
           </el-form-item>
         </el-form>
       </div>
@@ -55,10 +65,12 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { mapActions } from "vuex";
 import { sendMsg } from "@/helpers/message";
+import { UploadFilled } from "@element-plus/icons";
 
 export default {
   components: {
     QuillEditor,
+    UploadFilled,
   },
   name: "EditPost",
   data() {
@@ -86,6 +98,7 @@ export default {
           },
         ],
       },
+      formData: null,
     };
   },
   methods: {
@@ -108,15 +121,34 @@ export default {
     },
     savePost() {
       this.post.fullText = this.$refs.myQuillEditor.getText();
-      this.$store.dispatch("posts/savePost", this.post).then(
-        () => {
-          this.$router.push(`/post/${this.post._id}`);
-          sendMsg("success", "Post updated!");
-        },
-        (error) => {
-          sendMsg("error", error.response.data.error);
-        }
-      );
+      this.$store
+        .dispatch("posts/savePost", this.post)
+        .then(
+          () => {
+            if (this.formData) {
+              const payload = { image: this.formData, postId: this.post._id };
+              return this.$store.dispatch("posts/editPostPhoto", payload);
+            } else {
+              return Promise.resolve();
+            }
+          },
+          (error) => {
+            return Promise.reject(error);
+          }
+        )
+        .then(
+          () => {
+            this.$router.push(`/post/${this.post._id}`);
+            sendMsg("success", "Post updated!");
+          },
+          (error) => {
+            sendMsg("error", error.response.data.error);
+          }
+        );
+    },
+    async uploadImage(event) {
+      this.formData = new FormData();
+      this.formData.append("image", event.target.files[0]);
     },
   },
   async mounted() {
@@ -151,6 +183,24 @@ export default {
     :hover {
       opacity: 0.7;
     }
+  }
+
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 20px;
+    text-align: center;
+    padding: 0 12px;
+    margin-left: 10px;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  input[type="file"] {
+    display: none;
   }
 }
 

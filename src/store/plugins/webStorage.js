@@ -1,9 +1,23 @@
 export default function saveToLocalStorage(store) {
   store.subscribe((mutation) => {
-    if (mutation.type === 'loginSuccess' || mutation.type === 'profileSaveSuccess' || mutation.type === 'updateUser') {
-      const payload = mutation.payload;
-      localStorage.setItem("user", JSON.stringify(payload))
+
+    const payload = mutation.payload
+
+    switch (mutation.type) {
+      case "auth/loginSuccess": {
+        localStorage.setItem("user", JSON.stringify(payload))
+        break;
+      }
+      case "auth/profileSaveSuccess": {
+        localStorage.setItem("user", JSON.stringify(payload))
+        break;
+      }
+      case "auth/updateUser": {
+        localStorage.setItem("user", JSON.stringify(payload))
+        break;
+      }
     }
+
   })
 }
 

@@ -39,6 +39,16 @@
           }"
         ></div>
         <div class="page-post__fulltext">{{ post.fullText }}</div>
+        <div v-if="comments">
+          <div class="page-post__commments">
+            <comment-item
+              v-for="item in comments"
+              :key="item._id"
+              :comment="item"
+            >
+            </comment-item>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -46,15 +56,21 @@
 
 <script>
 import { mapGetters } from "vuex";
+import CommentItem from "@/components/CommentItem";
 
 export default {
   name: "PagePost",
+  components: {
+    CommentItem,
+  },
   data() {
     return {
       post: null,
       contentLoaded: false,
       BASE_URL: "http://51.158.179.21",
       namePostedBy: "",
+      comments: [],
+      sortedComments: [],
     };
   },
   computed: {
@@ -85,6 +101,13 @@ export default {
     } else {
       this.namePostedBy = "Account deleted";
     }
+
+    const commentResponse = await this.$store.dispatch(
+      "posts/getPostComments",
+      this.$route.params.id
+    );
+
+    this.comments = commentResponse;
   },
 };
 </script>

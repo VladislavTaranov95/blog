@@ -1,5 +1,4 @@
 import service from "@/helpers/api";
-import saveToLocalStorage from "../plugins/webStorage";
 
 const token = localStorage.getItem("token");
 const user = JSON.parse(localStorage.getItem("user"));
@@ -123,10 +122,9 @@ export const auth = {
     registerFailure(state) {
       state.authInfo.isAuth = false;
     },
-    loginSuccess(state, user) {
-      saveToLocalStorage()
+    loginSuccess(state, payload) {
       state.authInfo.isAuth = true;
-      state.authInfo.userInfo = user;
+      state.authInfo.userInfo = payload;
     },
     loginFailure(state) {
       state.authInfo.isAuth = false;
@@ -140,10 +138,8 @@ export const auth = {
     },
     profileSaveSuccess(state, data) {
       state.authInfo.userInfo = data;
-      saveToLocalStorage()
     },
     updateUser(state, user) {
-      saveToLocalStorage()
       state.authInfo.userInfo = user;
     },
   },

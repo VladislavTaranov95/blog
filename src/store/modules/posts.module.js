@@ -129,6 +129,25 @@ export const posts = {
         }
       )
     },
+    async editPostPhoto({ commit }, payload) {
+      console.log(payload)
+      const response = await service.put('/posts/upload/' + payload.postId, payload.image, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      commit('updatePost', response.data)
+    },
+    async getPostComments(_, postId) {
+      return service.get(`comments/post/${postId}`).then(
+        (response) => {
+          return Promise.resolve(response.data);
+        },
+        error => {
+          return Promise.reject(error.error);
+        }
+      )
+    },
   },
   mutations: {
     setPosts(state, posts) {

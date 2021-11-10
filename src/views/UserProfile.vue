@@ -211,7 +211,6 @@ export default {
         );
     },
     async selectedFile(event) {
-      console.log(1);
       const formData = new FormData();
       formData.append("avatar", event.target.files[0]);
       try {

@@ -103,7 +103,7 @@ export default {
           this.$router.push("/");
         },
         (error) => {
-          sendMsg("error", error.response.data.error);
+          sendMsg("error", error);
         }
       );
     },
